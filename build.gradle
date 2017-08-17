@@ -9,6 +9,7 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:2.3.3"
         classpath "org.codehaus.groovy:groovy-android-gradle-plugin:1.2.0"
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
     }
 }
 
@@ -19,6 +20,13 @@ allprojects {
         mavenCentral()
         mavenLocal()
         maven { url "https://jitpack.io" }
+        maven {
+            credentials {
+                username = System.getenv("artifactory_username")?.trim() ?: trusonaUsername
+                password = System.getenv("artifactory_password")?.trim() ?: trusonaPassword
+            }
+            url "https://trusona.jfrog.io/trusona/sdk-snapshots-local/"
+        }
     }
 
     gradle.projectsEvaluated {
@@ -31,4 +39,10 @@ allprojects {
 ext {
     compileSdkVersion = 26
     supportLibVersion = "26.0.1"
+
+    theGroupId = "com.trusona.android"
+    theArtifactId = "materialbarcodescanner"
+    theVersion = "0.0.1"
+    theArtifactSource = "./build/outputs/aar/materialbarcodescanner-release.aar"
+    debugArtifactSource = "./build/outputs/aar/materialbarcodescanner-debug.aar"
 }

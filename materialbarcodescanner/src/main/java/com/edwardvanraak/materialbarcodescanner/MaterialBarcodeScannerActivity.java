@@ -3,6 +3,7 @@ package com.edwardvanraak.materialbarcodescanner;
 import android.app.Dialog;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -31,15 +32,16 @@ public class MaterialBarcodeScannerActivity extends AppCompatActivity {
 
     private static final String TAG = "MaterialBarcodeScanner";
 
-    private MaterialBarcodeScanner mMaterialBarcodeScanner;
     private MaterialBarcodeScannerBuilder mMaterialBarcodeScannerBuilder;
 
     private BarcodeDetector barcodeDetector;
 
+    @Nullable
     private CameraSourcePreview mCameraSourcePreview;
 
     private GraphicOverlay<BarcodeGraphic> mGraphicOverlay;
 
+    @Nullable
     private SoundPoolPlayer mSoundPoolPlayer;
 
     /**
@@ -63,15 +65,14 @@ public class MaterialBarcodeScannerActivity extends AppCompatActivity {
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onMaterialBarcodeScanner(MaterialBarcodeScanner materialBarcodeScanner) {
-        this.mMaterialBarcodeScanner = materialBarcodeScanner;
-        mMaterialBarcodeScannerBuilder = mMaterialBarcodeScanner.getMaterialBarcodeScannerBuilder();
-        barcodeDetector = mMaterialBarcodeScanner.getMaterialBarcodeScannerBuilder().getBarcodeDetector();
+        mMaterialBarcodeScannerBuilder = materialBarcodeScanner.getMaterialBarcodeScannerBuilder();
+        barcodeDetector = materialBarcodeScanner.getMaterialBarcodeScannerBuilder().getBarcodeDetector();
         startCameraSource();
         setupLayout();
     }
 
     private void setupLayout() {
-        final TextView topTextView = (TextView) findViewById(R.id.topText);
+        final TextView topTextView = findViewById(R.id.topText);
         assertNotNull(topTextView);
         String topText = mMaterialBarcodeScannerBuilder.getText();
         if (!mMaterialBarcodeScannerBuilder.getText().equals("")) {
@@ -83,7 +84,7 @@ public class MaterialBarcodeScannerActivity extends AppCompatActivity {
 
     private void setupCenterTracker() {
         if (mMaterialBarcodeScannerBuilder.getScannerMode() == MaterialBarcodeScanner.SCANNER_MODE_CENTER) {
-            final ImageView centerTracker = (ImageView) findViewById(R.id.barcode_square);
+            final ImageView centerTracker = findViewById(R.id.barcode_square);
             centerTracker.setImageResource(mMaterialBarcodeScannerBuilder.getTrackerResourceID());
             mGraphicOverlay.setVisibility(View.INVISIBLE);
         }
@@ -91,7 +92,7 @@ public class MaterialBarcodeScannerActivity extends AppCompatActivity {
 
     private void updateCenterTrackerForDetectedState() {
         if (mMaterialBarcodeScannerBuilder.getScannerMode() == MaterialBarcodeScanner.SCANNER_MODE_CENTER) {
-            final ImageView centerTracker = (ImageView) findViewById(R.id.barcode_square);
+            final ImageView centerTracker = findViewById(R.id.barcode_square);
             runOnUiThread(new Runnable() {
 
                 @Override
@@ -103,8 +104,8 @@ public class MaterialBarcodeScannerActivity extends AppCompatActivity {
     }
 
     private void setupButtons() {
-        final LinearLayout flashOnButton = (LinearLayout) findViewById(R.id.flashIconButton);
-        final ImageView flashToggleIcon = (ImageView) findViewById(R.id.flashIcon);
+        final LinearLayout flashOnButton = findViewById(R.id.flashIconButton);
+        final ImageView flashToggleIcon = findViewById(R.id.flashIcon);
         assertNotNull(flashOnButton);
         flashOnButton.setOnClickListener(new View.OnClickListener() {
 
@@ -140,7 +141,7 @@ public class MaterialBarcodeScannerActivity extends AppCompatActivity {
             Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this, code, RC_HANDLE_GMS);
             dialog.show();
         }
-        mGraphicOverlay = (GraphicOverlay<BarcodeGraphic>) findViewById(R.id.graphicOverlay);
+        mGraphicOverlay = findViewById(R.id.graphicOverlay);
         BarcodeGraphicTracker.NewDetectionListener listener = new BarcodeGraphicTracker.NewDetectionListener() {
 
             @Override
@@ -168,13 +169,12 @@ public class MaterialBarcodeScannerActivity extends AppCompatActivity {
         CameraSource mCameraSource = mMaterialBarcodeScannerBuilder.getCameraSource();
         if (mCameraSource != null) {
             try {
-                mCameraSourcePreview = (CameraSourcePreview) findViewById(R.id.preview);
+                mCameraSourcePreview = findViewById(R.id.preview);
                 mCameraSourcePreview.start(mCameraSource, mGraphicOverlay);
             }
             catch (IOException e) {
                 Log.e(TAG, "Unable to start camera source.", e);
                 mCameraSource.release();
-                mCameraSource = null;
             }
         }
     }

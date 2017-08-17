@@ -3,13 +3,12 @@ package com.edwardvanraak.materialbarcodescanner;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
-
-import java.util.HashMap;
+import android.util.SparseIntArray;
 
 public class SoundPoolPlayer {
 
     private SoundPool mShortPlayer = null;
-    private HashMap mSounds = new HashMap();
+    private SparseIntArray mSounds = new SparseIntArray();
 
     public SoundPoolPlayer(Context pContext) {
         this.mShortPlayer = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);

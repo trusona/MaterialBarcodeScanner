@@ -9,7 +9,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.edwardvanraak.materialbarcodescanner.MaterialBarcodeScanner;
@@ -33,18 +32,19 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         result = (TextView) findViewById(R.id.barcodeResult);
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = findViewById(R.id.fab);
         assertNotNull(result);
         assertNotNull(fab);
         fab.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-               startScan();
+                startScan();
             }
         });
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             Barcode restoredBarcode = savedInstanceState.getParcelable(BARCODE_KEY);
-            if(restoredBarcode != null){
+            if (restoredBarcode != null) {
                 result.setText(restoredBarcode.rawValue);
                 barcodeResult = restoredBarcode;
             }
@@ -56,20 +56,21 @@ public class MainActivity extends AppCompatActivity {
          * Build a new MaterialBarcodeScanner
          */
         final MaterialBarcodeScanner materialBarcodeScanner = new MaterialBarcodeScannerBuilder()
-                .withActivity(MainActivity.this)
-                .withEnableAutoFocus(true)
-                .withBleepEnabled(true)
-                .withBackfacingCamera()
-                .withCenterTracker()
-                .withText("Scanning...")
-                .withResultListener(new MaterialBarcodeScanner.OnResultListener() {
-                    @Override
-                    public void onResult(Barcode barcode) {
-                        barcodeResult = barcode;
-                        result.setText(barcode.rawValue);
-                    }
-                })
-                .build();
+            .withActivity(MainActivity.this)
+            .withEnableAutoFocus(true)
+            .withBleepEnabled(true)
+            .withBackfacingCamera()
+            .withCenterTracker()
+            .withText("Scanning...")
+            .withResultListener(new MaterialBarcodeScanner.OnResultListener() {
+
+                @Override
+                public void onResult(Barcode barcode) {
+                    barcodeResult = barcode;
+                    result.setText(barcode.rawValue);
+                }
+            })
+            .build();
         materialBarcodeScanner.startScan();
     }
 
@@ -90,14 +91,15 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
             }
         };
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Error")
-                .setMessage(R.string.no_camera_permission)
-                .setPositiveButton(android.R.string.ok, listener)
-                .show();
+            .setMessage(R.string.no_camera_permission)
+            .setPositiveButton(android.R.string.ok, listener)
+            .show();
     }
 }

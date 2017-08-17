@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class SoundPoolPlayer {
 
-    private SoundPool mShortPlayer= null;
+    private SoundPool mShortPlayer = null;
     private HashMap mSounds = new HashMap();
 
     public SoundPoolPlayer(Context pContext) {

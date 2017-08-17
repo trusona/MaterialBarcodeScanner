@@ -52,16 +52,17 @@ public class MaterialBarcodeScannerActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        if(getWindow() != null){
+        if (getWindow() != null) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }else{
+        }
+        else {
             Log.e(TAG, "Barcode scanner could not go into fullscreen mode!");
         }
         setContentView(R.layout.barcode_capture);
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onMaterialBarcodeScanner(MaterialBarcodeScanner materialBarcodeScanner){
+    public void onMaterialBarcodeScanner(MaterialBarcodeScanner materialBarcodeScanner) {
         this.mMaterialBarcodeScanner = materialBarcodeScanner;
         mMaterialBarcodeScannerBuilder = mMaterialBarcodeScanner.getMaterialBarcodeScannerBuilder();
         barcodeDetector = mMaterialBarcodeScanner.getMaterialBarcodeScannerBuilder().getBarcodeDetector();
@@ -73,7 +74,7 @@ public class MaterialBarcodeScannerActivity extends AppCompatActivity {
         final TextView topTextView = (TextView) findViewById(R.id.topText);
         assertNotNull(topTextView);
         String topText = mMaterialBarcodeScannerBuilder.getText();
-        if(!mMaterialBarcodeScannerBuilder.getText().equals("")){
+        if (!mMaterialBarcodeScannerBuilder.getText().equals("")) {
             topTextView.setText(topText);
         }
         setupButtons();
@@ -81,17 +82,18 @@ public class MaterialBarcodeScannerActivity extends AppCompatActivity {
     }
 
     private void setupCenterTracker() {
-        if(mMaterialBarcodeScannerBuilder.getScannerMode() == MaterialBarcodeScanner.SCANNER_MODE_CENTER){
-            final ImageView centerTracker  = (ImageView) findViewById(R.id.barcode_square);
+        if (mMaterialBarcodeScannerBuilder.getScannerMode() == MaterialBarcodeScanner.SCANNER_MODE_CENTER) {
+            final ImageView centerTracker = (ImageView) findViewById(R.id.barcode_square);
             centerTracker.setImageResource(mMaterialBarcodeScannerBuilder.getTrackerResourceID());
             mGraphicOverlay.setVisibility(View.INVISIBLE);
         }
     }
 
     private void updateCenterTrackerForDetectedState() {
-        if(mMaterialBarcodeScannerBuilder.getScannerMode() == MaterialBarcodeScanner.SCANNER_MODE_CENTER){
-            final ImageView centerTracker  = (ImageView) findViewById(R.id.barcode_square);
+        if (mMaterialBarcodeScannerBuilder.getScannerMode() == MaterialBarcodeScanner.SCANNER_MODE_CENTER) {
+            final ImageView centerTracker = (ImageView) findViewById(R.id.barcode_square);
             runOnUiThread(new Runnable() {
+
                 @Override
                 public void run() {
                     centerTracker.setImageResource(mMaterialBarcodeScannerBuilder.getTrackerDetectedResourceID());
@@ -101,23 +103,25 @@ public class MaterialBarcodeScannerActivity extends AppCompatActivity {
     }
 
     private void setupButtons() {
-        final LinearLayout flashOnButton = (LinearLayout)findViewById(R.id.flashIconButton);
-        final ImageView flashToggleIcon = (ImageView)findViewById(R.id.flashIcon);
+        final LinearLayout flashOnButton = (LinearLayout) findViewById(R.id.flashIconButton);
+        final ImageView flashToggleIcon = (ImageView) findViewById(R.id.flashIcon);
         assertNotNull(flashOnButton);
         flashOnButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 if (mFlashOn) {
                     flashToggleIcon.setBackgroundResource(R.drawable.ic_flash_on_white_24dp);
                     disableTorch();
-                } else {
+                }
+                else {
                     flashToggleIcon.setBackgroundResource(R.drawable.ic_flash_off_white_24dp);
                     enableTorch();
                 }
                 mFlashOn ^= true;
             }
         });
-        if(mMaterialBarcodeScannerBuilder.isFlashEnabledByDefault()){
+        if (mMaterialBarcodeScannerBuilder.isFlashEnabledByDefault()) {
             flashToggleIcon.setBackgroundResource(R.drawable.ic_flash_off_white_24dp);
         }
     }
@@ -129,31 +133,33 @@ public class MaterialBarcodeScannerActivity extends AppCompatActivity {
      */
     private void startCameraSource() throws SecurityException {
         // check that the device has play services available.
-       mSoundPoolPlayer = new SoundPoolPlayer(this);
+        mSoundPoolPlayer = new SoundPoolPlayer(this);
         int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(
-                getApplicationContext());
+            getApplicationContext());
         if (code != ConnectionResult.SUCCESS) {
             Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this, code, RC_HANDLE_GMS);
             dialog.show();
         }
-        mGraphicOverlay = (GraphicOverlay<BarcodeGraphic>)findViewById(R.id.graphicOverlay);
-        BarcodeGraphicTracker.NewDetectionListener listener =  new BarcodeGraphicTracker.NewDetectionListener() {
+        mGraphicOverlay = (GraphicOverlay<BarcodeGraphic>) findViewById(R.id.graphicOverlay);
+        BarcodeGraphicTracker.NewDetectionListener listener = new BarcodeGraphicTracker.NewDetectionListener() {
+
             @Override
             public void onNewDetection(Barcode barcode) {
-                if(!mDetectionConsumed){
+                if (!mDetectionConsumed) {
                     mDetectionConsumed = true;
                     Log.d(TAG, "Barcode detected! - " + barcode.displayValue);
                     EventBus.getDefault().postSticky(barcode);
                     updateCenterTrackerForDetectedState();
-                    if(mMaterialBarcodeScannerBuilder.isBleepEnabled()){
+                    if (mMaterialBarcodeScannerBuilder.isBleepEnabled()) {
                         mSoundPoolPlayer.playShortResource(R.raw.bleep);
                     }
                     mGraphicOverlay.postDelayed(new Runnable() {
+
                         @Override
                         public void run() {
                             finish();
                         }
-                    },50);
+                    }, 50);
                 }
             }
         };
@@ -164,7 +170,8 @@ public class MaterialBarcodeScannerActivity extends AppCompatActivity {
             try {
                 mCameraSourcePreview = (CameraSourcePreview) findViewById(R.id.preview);
                 mCameraSourcePreview.start(mCameraSource, mGraphicOverlay);
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 Log.e(TAG, "Unable to start camera source.", e);
                 mCameraSource.release();
                 mCameraSource = null;
@@ -172,20 +179,22 @@ public class MaterialBarcodeScannerActivity extends AppCompatActivity {
         }
     }
 
-    private void enableTorch() throws SecurityException{
+    private void enableTorch() throws SecurityException {
         mMaterialBarcodeScannerBuilder.getCameraSource().setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
         try {
             mMaterialBarcodeScannerBuilder.getCameraSource().start();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void disableTorch() throws SecurityException{
+    private void disableTorch() throws SecurityException {
         mMaterialBarcodeScannerBuilder.getCameraSource().setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
         try {
             mMaterialBarcodeScannerBuilder.getCameraSource().start();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -220,7 +229,7 @@ public class MaterialBarcodeScannerActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(isFinishing()){
+        if (isFinishing()) {
             clean();
         }
     }
@@ -231,7 +240,7 @@ public class MaterialBarcodeScannerActivity extends AppCompatActivity {
             mCameraSourcePreview.release();
             mCameraSourcePreview = null;
         }
-        if(mSoundPoolPlayer != null){
+        if (mSoundPoolPlayer != null) {
             mSoundPoolPlayer.release();
             mSoundPoolPlayer = null;
         }

@@ -43,7 +43,7 @@ public class MaterialBarcodeScanner {
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onBarcodeScannerResult(Barcode barcode){
+    public void onBarcodeScannerResult(Barcode barcode) {
         onResultListener.onResult(barcode);
         EventBus.getDefault().removeStickyEvent(barcode);
         EventBus.getDefault().unregister(this);
@@ -59,18 +59,19 @@ public class MaterialBarcodeScanner {
 
     /**
      * Start a scan for a barcode
-     *
+     * <p>
      * This opens a new activity with the parameters provided by the MaterialBarcodeScannerBuilder
      */
-    public void startScan(){
+    public void startScan() {
         EventBus.getDefault().register(this);
-        if(mMaterialBarcodeScannerBuilder.getActivity() == null){
+        if (mMaterialBarcodeScannerBuilder.getActivity() == null) {
             throw new RuntimeException("Could not start scan: Activity reference lost (please rebuild the MaterialBarcodeScanner before calling startScan)");
         }
         int mCameraPermission = ActivityCompat.checkSelfPermission(mMaterialBarcodeScannerBuilder.getActivity(), Manifest.permission.CAMERA);
         if (mCameraPermission != PackageManager.PERMISSION_GRANTED) {
             requestCameraPermission();
-        }else{
+        }
+        else {
             //Open activity
             EventBus.getDefault().postSticky(this);
             Intent intent = new Intent(mMaterialBarcodeScannerBuilder.getActivity(), MaterialBarcodeScannerActivity.class);
@@ -85,15 +86,16 @@ public class MaterialBarcodeScanner {
             return;
         }
         View.OnClickListener listener = new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 ActivityCompat.requestPermissions(mMaterialBarcodeScannerBuilder.getActivity(), mPermissions, RC_HANDLE_CAMERA_PERM);
             }
         };
         Snackbar.make(mMaterialBarcodeScannerBuilder.mRootView, R.string.permission_camera_rationale,
-                Snackbar.LENGTH_INDEFINITE)
-                .setAction(android.R.string.ok, listener)
-                .show();
+            Snackbar.LENGTH_INDEFINITE)
+            .setAction(android.R.string.ok, listener)
+            .show();
     }
 
     public MaterialBarcodeScannerBuilder getMaterialBarcodeScannerBuilder() {

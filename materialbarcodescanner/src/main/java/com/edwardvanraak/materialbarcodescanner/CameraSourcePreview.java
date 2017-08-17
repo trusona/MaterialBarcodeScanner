@@ -95,7 +95,8 @@ public class CameraSourcePreview extends ViewGroup {
                     // Swap width and height sizes when in portrait, since it will be rotated by
                     // 90 degrees
                     mOverlay.setCameraInfo(min, max, mCameraSource.getCameraFacing());
-                } else {
+                }
+                else {
                     mOverlay.setCameraInfo(max, min, mCameraSource.getCameraFacing());
                 }
                 mOverlay.clear();
@@ -110,9 +111,11 @@ public class CameraSourcePreview extends ViewGroup {
             mSurfaceAvailable = true;
             try {
                 startIfReady();
-            } catch (SecurityException se) {
-                Log.e(TAG,"Do not have permission to start the camera", se);
-            } catch (IOException e) {
+            }
+            catch (SecurityException se) {
+                Log.e(TAG, "Do not have permission to start the camera", se);
+            }
+            catch (IOException e) {
                 Log.e(TAG, "Could not start camera source.", e);
             }
         }
@@ -164,7 +167,8 @@ public class CameraSourcePreview extends ViewGroup {
             childWidth = viewWidth;
             childHeight = (int) ((float) previewHeight * widthRatio);
             childYOffset = (childHeight - viewHeight) / 2;
-        } else {
+        }
+        else {
             childWidth = (int) ((float) previewWidth * heightRatio);
             childHeight = viewHeight;
             childXOffset = (childWidth - viewWidth) / 2;
@@ -174,13 +178,14 @@ public class CameraSourcePreview extends ViewGroup {
             // One dimension will be cropped.  We shift child over or up by this offset and adjust
             // the size to maintain the proper aspect ratio.
             getChildAt(i).layout(
-                    -1 * childXOffset, -1 * childYOffset,
-                    childWidth - childXOffset, childHeight - childYOffset);
+                -1 * childXOffset, -1 * childYOffset,
+                childWidth - childXOffset, childHeight - childYOffset);
         }
 
         try {
             startIfReady();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             Log.e(TAG, "Could not start camera source.", e);
         }
     }

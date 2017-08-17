@@ -39,7 +39,7 @@ public class BarcodeTrackerFactory implements MultiProcessor.Factory<Barcode> {
     public Tracker<Barcode> create(Barcode barcode) {
         BarcodeGraphic graphic = new BarcodeGraphic(mGraphicOverlay, mTrackerColor);
         BarcodeGraphicTracker tracker = new BarcodeGraphicTracker(mGraphicOverlay, graphic);
-        if (mDetectionListener != null){
+        if (mDetectionListener != null) {
             tracker.setListener(mDetectionListener);
         }
         return tracker;

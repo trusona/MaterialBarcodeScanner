@@ -29,9 +29,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        result = (TextView) findViewById(R.id.barcodeResult);
+        result = findViewById(R.id.barcodeResult);
         final FloatingActionButton fab = findViewById(R.id.fab);
         assertNotNull(result);
         assertNotNull(fab);
@@ -55,12 +55,13 @@ public class MainActivity extends AppCompatActivity {
         /**
          * Build a new MaterialBarcodeScanner
          */
-        final MaterialBarcodeScanner materialBarcodeScanner = new MaterialBarcodeScannerBuilder()
+        new MaterialBarcodeScannerBuilder()
             .withActivity(MainActivity.this)
             .withEnableAutoFocus(true)
-            .withBleepEnabled(true)
-            .withBackfacingCamera()
+            .withBleepEnabled(false)
+            .withBackFacingCamera()
             .withCenterTracker()
+            .withOnlyPdf417()
             .withText("Scanning...")
             .withResultListener(new MaterialBarcodeScanner.OnResultListener() {
 
@@ -70,14 +71,14 @@ public class MainActivity extends AppCompatActivity {
                     result.setText(barcode.rawValue);
                 }
             })
-            .build();
-        materialBarcodeScanner.startScan();
+            .build()
+            .startScan();
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(BARCODE_KEY, barcodeResult);
-        super.onSaveInstanceState(outState);
+    protected void onSaveInstanceState(Bundle bundle) {
+        bundle.putParcelable(BARCODE_KEY, barcodeResult);
+        super.onSaveInstanceState(bundle);
     }
 
     @Override
@@ -96,8 +97,8 @@ public class MainActivity extends AppCompatActivity {
                 dialog.cancel();
             }
         };
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Error")
+
+        new AlertDialog.Builder(this).setTitle("Error")
             .setMessage(R.string.no_camera_permission)
             .setPositiveButton(android.R.string.ok, listener)
             .show();

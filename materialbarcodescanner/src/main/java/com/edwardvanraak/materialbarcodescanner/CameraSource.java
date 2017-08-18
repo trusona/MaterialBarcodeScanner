@@ -854,24 +854,23 @@ public class CameraSource {
      * size is null, then there is no picture size with the same aspect ratio as the preview size.
      */
     private static class SizePair {
-        private Size mPreview;
-        private Size mPicture;
+        private Size previewSize;
+        private Size pictureSize;
 
         public SizePair(android.hardware.Camera.Size previewSize,
                         android.hardware.Camera.Size pictureSize) {
-            mPreview = new Size(previewSize.width, previewSize.height);
+            this.previewSize = new Size(previewSize.width, previewSize.height);
             if (pictureSize != null) {
-                mPicture = new Size(pictureSize.width, pictureSize.height);
+                this.pictureSize = new Size(pictureSize.width, pictureSize.height);
             }
         }
 
         public Size previewSize() {
-            return mPreview;
+            return previewSize;
         }
 
-        @SuppressWarnings("unused")
         public Size pictureSize() {
-            return mPicture;
+            return pictureSize;
         }
     }
 
@@ -1069,7 +1068,7 @@ public class CameraSource {
         @Nullable
         private ByteBuffer mPendingFrameData;
 
-        FrameProcessingRunnable(Detector<?> detector) {
+        FrameProcessingRunnable(@Nullable Detector<?> detector) {
             mDetector = detector;
         }
 

@@ -17,6 +17,7 @@ package com.edwardvanraak.materialbarcodescanner;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -51,6 +52,7 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
     private float mHeightScaleFactor = 1.0f;
     private int mFacing = CameraSource.CAMERA_FACING_BACK;
     private Set<T> mGraphics = new HashSet<>();
+    @Nullable
     private T mFirstGraphic;
 
     /**

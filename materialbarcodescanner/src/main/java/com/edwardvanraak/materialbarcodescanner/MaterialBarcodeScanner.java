@@ -92,7 +92,7 @@ public class MaterialBarcodeScanner {
                 ActivityCompat.requestPermissions(mMaterialBarcodeScannerBuilder.getActivity(), mPermissions, RC_HANDLE_CAMERA_PERM);
             }
         };
-        Snackbar.make(mMaterialBarcodeScannerBuilder.mRootView, R.string.permission_camera_rationale,
+        Snackbar.make(mMaterialBarcodeScannerBuilder.getRootView(), R.string.permission_camera_rationale,
             Snackbar.LENGTH_INDEFINITE)
             .setAction(android.R.string.ok, listener)
             .show();

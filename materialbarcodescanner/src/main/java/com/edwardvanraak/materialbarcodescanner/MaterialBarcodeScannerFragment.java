@@ -46,7 +46,7 @@ public class MaterialBarcodeScannerFragment extends Fragment {
         flashOn = false;
     }
 
-    public static MaterialBarcodeScannerFragment instance(@Nullable Integer layout) {
+    public static MaterialBarcodeScannerFragment newInstance(@Nullable Integer layout) {
         Bundle bundle = new Bundle();
         bundle.putInt("layout", layout == null ? defaultLayout : layout);
 
@@ -196,7 +196,7 @@ public class MaterialBarcodeScannerFragment extends Fragment {
         }
     }
 
-    private NewDetectionListener newDetectionListener = new NewDetectionListener() {
+    protected NewDetectionListener newDetectionListener = new NewDetectionListener() {
 
         @Override
         public void onNewDetection(Barcode barcode) {

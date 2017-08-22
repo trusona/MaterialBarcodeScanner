@@ -12,7 +12,7 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 public class MaterialBarcodeScannerBuilder {
     @Nullable
-    private Activity activity;
+    protected Activity activity;
     private ViewGroup rootView;
 
     private MaterialBarcodeScanner.OnResultListener onResultListener;
@@ -22,7 +22,7 @@ public class MaterialBarcodeScannerBuilder {
     private boolean flashEnabledByDefault = false;
     private boolean autoFocusEnabled = false;
     private boolean bleepEnabled = false;
-    private boolean mUsed = false; //used to check if a builder is only used
+    protected boolean mUsed = false; //used to check if a builder is only used
 
     private int trackerDetectedResourceID = R.drawable.material_barcode_square_512_green;
     private int trackerResourceID = R.drawable.material_barcode_square_512;
@@ -236,7 +236,7 @@ public class MaterialBarcodeScannerBuilder {
     /**
      * Build a barcode scanner using the Mobile Vision Barcode API
      */
-    private void buildMobileVisionBarcodeDetector() {
+    protected void buildMobileVisionBarcodeDetector() {
         String focusMode = Camera.Parameters.FOCUS_MODE_FIXED;
 
         if (autoFocusEnabled) {

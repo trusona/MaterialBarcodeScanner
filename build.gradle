@@ -40,7 +40,7 @@ ext {
     playServicesVersion = "11.2.0"
     supportLibVersion = "26.0.1"
 
-    theVersion = "0.0.2"
+    theVersion = "0.0.3"
 
     theGroupId = "com.trusona.android"
     theArtifactId = "materialbarcodescanner"

@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -31,6 +30,8 @@ public class MaterialBarcodeScanner {
     public static final int SCANNER_MODE_CENTER = 2;
 
     protected final MaterialBarcodeScannerBuilder materialBarcodeScannerBuilder;
+
+    private MaterialBarcodeScannerFragment materialBarcodeScannerFragment;
 
     private FrameLayout mContentView; //Content frame for fragments
 
@@ -78,14 +79,15 @@ public class MaterialBarcodeScanner {
             EventBus.getDefault().postSticky(this);
 
             // new code - attempting to start a fragment
-            
             FragmentManager fragmentManager = ((AppCompatActivity) materialBarcodeScannerBuilder.getActivity()).getSupportFragmentManager();
-            Fragment fragment = MaterialBarcodeScannerFragment.instance(null);
+            materialBarcodeScannerFragment = MaterialBarcodeScannerFragment.instance(null);
 
             int id = materialBarcodeScannerBuilder.getRootView().getId();
 
-            fragmentManager.beginTransaction().replace(id, fragment)
-                .addToBackStack(MaterialBarcodeScannerFragment.class.getSimpleName()).commit();
+            fragmentManager.beginTransaction()
+                .replace(id, materialBarcodeScannerFragment)
+                .addToBackStack(MaterialBarcodeScannerFragment.class.getSimpleName())
+                .commit();
             // end
 
 
@@ -94,6 +96,10 @@ public class MaterialBarcodeScanner {
             //Intent intent = new Intent(materialBarcodeScannerBuilder.getActivity(), MaterialBarcodeScannerActivity.class);
             //materialBarcodeScannerBuilder.getActivity().startActivity(intent);
         }
+    }
+
+    public MaterialBarcodeScannerFragment getMaterialBarcodeScannerFragment() {
+        return materialBarcodeScannerFragment;
     }
 
     private void requestCameraPermission() {

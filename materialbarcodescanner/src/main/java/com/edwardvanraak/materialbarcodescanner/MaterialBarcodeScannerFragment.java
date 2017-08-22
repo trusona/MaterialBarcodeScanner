@@ -196,14 +196,6 @@ public class MaterialBarcodeScannerFragment extends Fragment {
         }
     }
 
-    private Runnable finisher = new Runnable() {
-
-        @Override
-        public void run() {
-            getActivity().finish();
-        }
-    };
-
     private NewDetectionListener newDetectionListener = new NewDetectionListener() {
 
         @Override
@@ -213,13 +205,20 @@ public class MaterialBarcodeScannerFragment extends Fragment {
                 logger.debug("Barcode detected! => {}", barcode.displayValue);
 
                 EventBus.getDefault().postSticky(barcode);
-                updateCenterTrackerForDetectedState();
+
+                getActivity().runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        updateCenterTrackerForDetectedState();
+                    }
+                });
 
                 if (materialBarcodeScannerBuilder.isBleepEnabled()) {
                     new SoundPlayer(getContext(), R.raw.bleep);
                 }
 
-                barcodeGraphicOverlay.postDelayed(finisher, 50);
+                //barcodeGraphicOverlay.postDelayed(finisher, 50);
             }
         }
     };

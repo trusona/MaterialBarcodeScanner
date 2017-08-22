@@ -18,16 +18,14 @@ import com.google.android.gms.vision.barcode.Barcode;
 import static junit.framework.Assert.assertNotNull;
 
 public class MainActivity extends AppCompatActivity {
-
     public static final String BARCODE_KEY = "BARCODE";
 
     private Barcode barcodeResult;
-
     private TextView result;
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(final Bundle bundle) {
+        super.onCreate(bundle);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -42,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
                 startScan();
             }
         });
-        if (savedInstanceState != null) {
-            Barcode restoredBarcode = savedInstanceState.getParcelable(BARCODE_KEY);
+        if (bundle != null) {
+            Barcode restoredBarcode = bundle.getParcelable(BARCODE_KEY);
             if (restoredBarcode != null) {
                 result.setText(restoredBarcode.rawValue);
                 barcodeResult = restoredBarcode;
@@ -52,11 +50,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startScan() {
-        /**
-         * Build a new MaterialBarcodeScanner
-         */
         new MaterialBarcodeScannerBuilder()
-            .withActivity(MainActivity.this)
+            .withActivity(this)
             .withEnableAutoFocus(true)
             .withBleepEnabled(false)
             .withBackFacingCamera()

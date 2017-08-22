@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -29,23 +30,21 @@ import static junit.framework.Assert.assertNotNull;
 
 public class MaterialBarcodeScannerFragment extends Fragment {
     private static final Logger logger = LoggerFactory.getLogger(MaterialBarcodeScannerFragment.class);
-    private static final int defaultLayout = R.layout.barcode_capture;
+    private static final int defaultLayout = R.layout.fragment_barcode_capture;
 
-    private MaterialBarcodeScanner materialBarcodeScanner;
     private MaterialBarcodeScannerBuilder materialBarcodeScannerBuilder;
-    private CameraSourcePreview cameraSourcePreview;
     private GraphicOverlay<BarcodeGraphic> barcodeGraphicOverlay;
+    private CameraSourcePreview cameraSourcePreview;
     private BarcodeDetector barcodeDetector;
-    private int layout;
     private boolean detectionConsumed;
     private boolean flashOn;
+    private int layout;
 
 
     public MaterialBarcodeScannerFragment() {
         detectionConsumed = false;
         flashOn = false;
     }
-
 
     public static MaterialBarcodeScannerFragment instance(@Nullable Integer layout) {
         Bundle bundle = new Bundle();
@@ -57,6 +56,14 @@ public class MaterialBarcodeScannerFragment extends Fragment {
         return fragment;
     }
 
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onMaterialBarcodeScanner(MaterialBarcodeScanner materialBarcodeScanner) {
+        materialBarcodeScannerBuilder = materialBarcodeScanner.getMaterialBarcodeScannerBuilder();
+        barcodeDetector = materialBarcodeScanner.getMaterialBarcodeScannerBuilder().getBarcodeDetector();
+        startCameraSource();
+        setupLayout();
+    }
+
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -65,19 +72,19 @@ public class MaterialBarcodeScannerFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
-        View view = inflater.inflate(layout, viewGroup, false);
-        init();
-        return view;
+        return inflater.inflate(layout, viewGroup, false);
     }
 
-    private void init() {
-        materialBarcodeScannerBuilder = materialBarcodeScanner.getMaterialBarcodeScannerBuilder();
-        barcodeDetector = materialBarcodeScanner.getMaterialBarcodeScannerBuilder().getBarcodeDetector();
-        startCameraSource();
+    private void setupLayout() {
+        if (!materialBarcodeScannerBuilder.getText().isEmpty()) {
+            String topText = materialBarcodeScannerBuilder.getText();
+            TextView topTextView = getActivity().findViewById(R.id.topText);
+            topTextView.setText(topText);
+        }
+
         setupButtons();
         setupCenterTracker();
     }
-
 
     private void startCameraSource() throws SecurityException {
         // check that the device has play services available.

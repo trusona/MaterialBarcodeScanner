@@ -36,7 +36,7 @@ public class MaterialBarcodeScannerFragment extends Fragment {
     private GraphicOverlay<BarcodeGraphic> barcodeGraphicOverlay;
     private CameraSourcePreview cameraSourcePreview;
     private BarcodeDetector barcodeDetector;
-    private boolean detectionConsumed;
+    protected boolean detectionConsumed;
     private boolean flashOn;
     private int layout;
 

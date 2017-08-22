@@ -252,7 +252,7 @@ public class MaterialBarcodeScannerBuilder {
             .build();
     }
 
-    ViewGroup getRootView() {
+    public ViewGroup getRootView() {
         return rootView;
     }
 

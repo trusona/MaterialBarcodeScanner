@@ -80,7 +80,7 @@ public class MaterialBarcodeScanner {
 
             // new code - attempting to start a fragment
             FragmentManager fragmentManager = ((AppCompatActivity) materialBarcodeScannerBuilder.getActivity()).getSupportFragmentManager();
-            materialBarcodeScannerFragment = MaterialBarcodeScannerFragment.instance(null);
+            materialBarcodeScannerFragment = MaterialBarcodeScannerFragment.newInstance(null);
 
             int id = materialBarcodeScannerBuilder.getRootView().getId();
 
@@ -102,7 +102,7 @@ public class MaterialBarcodeScanner {
         return materialBarcodeScannerFragment;
     }
 
-    private void requestCameraPermission() {
+    protected void requestCameraPermission() {
         final String[] mPermissions = new String[]{Manifest.permission.CAMERA};
         if (!ActivityCompat.shouldShowRequestPermissionRationale(materialBarcodeScannerBuilder.getActivity(), Manifest.permission.CAMERA)) {
             ActivityCompat.requestPermissions(materialBarcodeScannerBuilder.getActivity(), mPermissions, RC_HANDLE_CAMERA_PERM);

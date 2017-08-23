@@ -1,1 +1,1 @@
-clear;./gradlew build
+clear;./gradlew build publish

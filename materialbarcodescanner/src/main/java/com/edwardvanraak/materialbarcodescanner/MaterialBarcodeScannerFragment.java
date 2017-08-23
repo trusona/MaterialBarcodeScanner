@@ -77,12 +77,6 @@ public class MaterialBarcodeScannerFragment extends Fragment {
     }
 
     private void setupLayout() {
-        if (!materialBarcodeScannerBuilder.getText().isEmpty()) {
-            String topText = materialBarcodeScannerBuilder.getText();
-            TextView topTextView = getActivity().findViewById(R.id.topText);
-            topTextView.setText(topText);
-        }
-
         setupButtons();
         setupCenterTracker();
     }

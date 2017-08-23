@@ -101,16 +101,7 @@ public class MaterialBarcodeScannerFragment extends Fragment {
             barcodeDetector.setProcessor(new MultiProcessor.Builder<>(barcodeFactory).build());
             CameraSource cameraSource = materialBarcodeScannerBuilder.getCameraSource();
 
-            if (cameraSource != null) {
-                try {
-                    cameraSourcePreview = getActivity().findViewById(R.id.preview);
-                    cameraSourcePreview.start(cameraSource, barcodeGraphicOverlay);
-                }
-                catch (IOException e) {
-                    logger.error("Unable to start camera source.", e);
-                    cameraSource.release();
-                }
-            }
+            startCameraPreview(cameraSource);
         }
         else {
             GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), code, RC_HANDLE_GMS).show();
@@ -201,6 +192,23 @@ public class MaterialBarcodeScannerFragment extends Fragment {
         catch (IOException e) {
             logger.error("Oops!", e);
         }
+    }
+
+    protected void startCameraPreview(CameraSource cameraSource) {
+        if (cameraSource != null) {
+            try {
+                cameraSourcePreview = getActivity().findViewById(R.id.preview);
+                cameraSourcePreview.start(cameraSource, barcodeGraphicOverlay);
+            }
+            catch (IOException e) {
+                logger.error("Unable to start camera source.", e);
+                cameraSource.release();
+            }
+        }
+    }
+
+    protected void stopCameraPreview() {
+        cameraSourcePreview.stop();
     }
 
     protected NewDetectionListener newDetectionListener = new NewDetectionListener() {

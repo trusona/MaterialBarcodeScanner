@@ -168,26 +168,20 @@ public class MaterialBarcodeScannerFragment extends Fragment {
     private void setupButtons() {
         logger.info("@setupButtons");
         final LinearLayout flashOnButton = getActivity().findViewById(R.id.flashIconButton);
-        final ImageView flashToggleIcon = getActivity().findViewById(R.id.flashIcon);
         assertNotNull(flashOnButton);
         flashOnButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
                 if (flashOn) {
-                    flashToggleIcon.setBackgroundResource(R.drawable.ic_flash_on_white_24dp);
                     disableTorch();
                 }
                 else {
-                    flashToggleIcon.setBackgroundResource(R.drawable.ic_flash_off_white_24dp);
                     enableTorch();
                 }
                 flashOn ^= true;
             }
         });
-        if (materialBarcodeScannerBuilder.isFlashEnabledByDefault()) {
-            flashToggleIcon.setBackgroundResource(R.drawable.ic_flash_off_white_24dp);
-        }
     }
 
     private void enableTorch() throws SecurityException {

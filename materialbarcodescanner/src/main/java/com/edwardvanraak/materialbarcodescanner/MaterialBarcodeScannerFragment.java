@@ -1,5 +1,6 @@
 package com.edwardvanraak.materialbarcodescanner;
 
+import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static android.view.View.*;
 import static com.edwardvanraak.materialbarcodescanner.MaterialBarcodeScannerActivity.RC_HANDLE_GMS;
 import static junit.framework.Assert.assertNotNull;
 
@@ -155,27 +156,36 @@ public class MaterialBarcodeScannerFragment extends Fragment {
         if (materialBarcodeScannerBuilder.getScannerMode() == MaterialBarcodeScanner.SCANNER_MODE_CENTER) {
             ImageView centerTracker = getActivity().findViewById(R.id.barcode_square);
             centerTracker.setImageResource(materialBarcodeScannerBuilder.getTrackerResourceID());
-            barcodeGraphicOverlay.setVisibility(View.INVISIBLE);
+            barcodeGraphicOverlay.setVisibility(INVISIBLE);
         }
     }
 
     private void setupButtons() {
         logger.info("@setupButtons");
-        final LinearLayout flashOnButton = getActivity().findViewById(R.id.flashIconButton);
-        assertNotNull(flashOnButton);
-        flashOnButton.setOnClickListener(new View.OnClickListener() {
+        final LinearLayout flashButton = getActivity().findViewById(R.id.flashIconButton);
+        assertNotNull(flashButton);
+        if (isFlashAvailable()) {
+            flashButton.setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(View view) {
-                if (flashOn) {
-                    disableTorch();
+                @Override
+                public void onClick(View view) {
+                    if (flashOn) {
+                        disableTorch();
+                    }
+                    else {
+                        enableTorch();
+                    }
+                    flashOn ^= true;
                 }
-                else {
-                    enableTorch();
-                }
-                flashOn ^= true;
-            }
-        });
+            });
+        }
+        else {
+            flashButton.setVisibility(GONE);
+        }
+    }
+
+    private boolean isFlashAvailable() {
+        return getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
     }
 
     private void enableTorch() throws SecurityException {

@@ -58,7 +58,7 @@ public class MaterialBarcodeScannerFragment extends Fragment {
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onMaterialBarcodeScanner(MaterialBarcodeScanner materialBarcodeScanner) {
-        logger.info("+++M: onMaterialBarcodeScanner");
+        logger.info("@onMaterialBarcodeScanner");
         materialBarcodeScannerBuilder = materialBarcodeScanner.getMaterialBarcodeScannerBuilder();
         barcodeDetector = materialBarcodeScanner.getMaterialBarcodeScannerBuilder().getBarcodeDetector();
         startCameraSource();
@@ -88,7 +88,7 @@ public class MaterialBarcodeScannerFragment extends Fragment {
     }
 
     private void startCameraSource() throws SecurityException {
-        logger.info("+++M: startCameraSource");
+        logger.info("@startCameraSource");
         // check that the device has play services available.
         int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getContext());
 
@@ -127,21 +127,21 @@ public class MaterialBarcodeScannerFragment extends Fragment {
 
     @Override
     public void onStart() {
-        logger.info("+++M: onStart");
+        logger.info("@onStart");
         super.onStart();
         EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
-        logger.info("+++M: onStop");
+        logger.info("@onStop");
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
 
     @Override
     public void onPause() {
-        logger.info("+++M: onPause");
+        logger.info("@onPause");
         super.onPause();
 
         if (cameraSourcePreview != null) {
@@ -150,7 +150,7 @@ public class MaterialBarcodeScannerFragment extends Fragment {
     }
 
     private void setupCenterTracker() {
-        logger.info("+++M: setupCenterTracker");
+        logger.info("@setupCenterTracker");
         if (materialBarcodeScannerBuilder.getScannerMode() == MaterialBarcodeScanner.SCANNER_MODE_CENTER) {
             ImageView centerTracker = getActivity().findViewById(R.id.barcode_square);
             centerTracker.setImageResource(materialBarcodeScannerBuilder.getTrackerResourceID());
@@ -159,7 +159,7 @@ public class MaterialBarcodeScannerFragment extends Fragment {
     }
 
     private void setupButtons() {
-        logger.info("+++M: setupButtons");
+        logger.info("@setupButtons");
         final LinearLayout flashOnButton = getActivity().findViewById(R.id.flashIconButton);
         final ImageView flashToggleIcon = getActivity().findViewById(R.id.flashIcon);
         assertNotNull(flashOnButton);
@@ -207,7 +207,7 @@ public class MaterialBarcodeScannerFragment extends Fragment {
 
         @Override
         public void onNewDetection(Barcode barcode) {
-            logger.info("+++M: onNewDetection");
+            logger.info("@onNewDetection");
             if (!detectionConsumed) {
                 detectionConsumed = true;
                 logger.debug("Barcode detected! => {}", barcode.displayValue);
@@ -225,8 +225,6 @@ public class MaterialBarcodeScannerFragment extends Fragment {
                 if (materialBarcodeScannerBuilder.isBleepEnabled()) {
                     new SoundPlayer(getContext(), R.raw.bleep);
                 }
-
-                //barcodeGraphicOverlay.postDelayed(finisher, 50);
             }
         }
     };

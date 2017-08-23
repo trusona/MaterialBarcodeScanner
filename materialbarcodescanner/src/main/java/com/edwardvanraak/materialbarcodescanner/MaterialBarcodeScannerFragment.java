@@ -95,6 +95,7 @@ public class MaterialBarcodeScannerFragment extends Fragment {
         if (code == ConnectionResult.SUCCESS) {
             barcodeGraphicOverlay = getActivity().findViewById(R.id.graphicOverlay);
 
+            // TODO: Sending null here might fix the issue in which the barcode was sent twice
             BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(barcodeGraphicOverlay,
                 newDetectionListener, materialBarcodeScannerBuilder.getTrackerColor());
 
@@ -149,6 +150,12 @@ public class MaterialBarcodeScannerFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        clean();
+    }
+
     private void setupCenterTracker() {
         logger.info("@setupCenterTracker");
         if (materialBarcodeScannerBuilder.getScannerMode() == MaterialBarcodeScanner.SCANNER_MODE_CENTER) {
@@ -200,6 +207,15 @@ public class MaterialBarcodeScannerFragment extends Fragment {
         }
         catch (IOException e) {
             logger.error("Oops!", e);
+        }
+    }
+
+    private void clean() {
+        EventBus.getDefault().removeStickyEvent(MaterialBarcodeScanner.class);
+
+        if (cameraSourcePreview != null) {
+            cameraSourcePreview.release();
+            cameraSourcePreview = null;
         }
     }
 

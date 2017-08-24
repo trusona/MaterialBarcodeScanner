@@ -22,7 +22,7 @@ public class MaterialBarcodeScannerBuilder {
     private boolean flashEnabledByDefault = false;
     private boolean autoFocusEnabled = false;
     private boolean bleepEnabled = false;
-    protected boolean mUsed = false; //used to check if a builder is only used
+    private boolean used = false; //used to check if a builder is only used
 
     private int trackerDetectedResourceID = R.drawable.material_barcode_square_512_green;
     private int trackerResourceID = R.drawable.material_barcode_square_512;
@@ -31,7 +31,6 @@ public class MaterialBarcodeScannerBuilder {
     private int scannerMode = MaterialBarcodeScanner.SCANNER_MODE_FREE;
     private int barcodeFormats = Barcode.ALL_FORMATS;
 
-    private int focusMode2;
 
     private String text = "";
 
@@ -220,13 +219,12 @@ public class MaterialBarcodeScannerBuilder {
      * @return A ready to use MaterialBarcodeScanner
      */
     public MaterialBarcodeScanner build() {
-        if (mUsed) {
+        if (used) {
             throw new RuntimeException("You must not reuse a MaterialBarcodeScanner builder");
         }
         if (activity == null) {
             throw new RuntimeException("Please pass an activity to the MaterialBarcodeScannerBuilder");
         }
-        mUsed = true;
         buildMobileVisionBarcodeDetector();
         MaterialBarcodeScanner materialBarcodeScanner = new MaterialBarcodeScanner(this);
         materialBarcodeScanner.setOnResultListener(onResultListener);
@@ -238,6 +236,7 @@ public class MaterialBarcodeScannerBuilder {
      */
     protected void buildMobileVisionBarcodeDetector() {
         String focusMode = Camera.Parameters.FOCUS_MODE_FIXED;
+        used = true;
 
         if (autoFocusEnabled) {
             focusMode = Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE;
@@ -261,6 +260,7 @@ public class MaterialBarcodeScannerBuilder {
      *
      * @return
      */
+    @Nullable
     public Activity getActivity() {
         return activity;
     }
@@ -345,6 +345,10 @@ public class MaterialBarcodeScannerBuilder {
      */
     public int getScannerMode() {
         return scannerMode;
+    }
+
+    public boolean isUsedBuilder() {
+        return used;
     }
 
     public void clean() {

@@ -82,42 +82,6 @@ public class MaterialBarcodeScannerFragment extends Fragment {
         return inflater.inflate(layout, viewGroup, false);
     }
 
-    private void setupLayout() {
-        setupButtons();
-        setupCenterTracker();
-    }
-
-    private void startCameraSource() throws SecurityException {
-        logger.info("@startCameraSource()");
-        // check that the device has play services available.
-        int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getContext());
-
-        if (code == ConnectionResult.SUCCESS) {
-            barcodeGraphicOverlay = getActivity().findViewById(R.id.graphicOverlay);
-
-            // TODO: Sending null here might fix the issue in which the barcode was sent twice
-            BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(barcodeGraphicOverlay,
-                newDetectionListener, materialBarcodeScannerBuilder.getTrackerColor());
-
-            barcodeDetector.setProcessor(new MultiProcessor.Builder<>(barcodeFactory).build());
-            CameraSource cameraSource = materialBarcodeScannerBuilder.getCameraSource();
-
-            if (cameraSource != null) {
-                try {
-                    cameraSourcePreview = getActivity().findViewById(R.id.preview);
-                    cameraSourcePreview.start(cameraSource, barcodeGraphicOverlay);
-                }
-                catch (IOException e) {
-                    logger.error("Unable to start camera source.", e);
-                    cameraSource.release();
-                }
-            }
-        }
-        else {
-            GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), code, RC_HANDLE_GMS).show();
-        }
-    }
-
     @Override
     public void onStart() {
         logger.info("@onStart");
@@ -147,6 +111,12 @@ public class MaterialBarcodeScannerFragment extends Fragment {
         super.onDestroy();
         clean();
     }
+
+    protected void setNewDetectionListener(NewDetectionListener newDetectionListener) {
+        this.newDetectionListener = newDetectionListener;
+    }
+
+    // privates
 
     private void setupCenterTracker() {
         logger.info("@setupCenterTracker()");
@@ -196,6 +166,42 @@ public class MaterialBarcodeScannerFragment extends Fragment {
         if (cameraSourcePreview != null) {
             cameraSourcePreview.release();
             cameraSourcePreview = null;
+        }
+    }
+
+    private void setupLayout() {
+        setupButtons();
+        setupCenterTracker();
+    }
+
+    private void startCameraSource() throws SecurityException {
+        logger.info("@startCameraSource()");
+        // check that the device has play services available.
+        int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getContext());
+
+        if (code == ConnectionResult.SUCCESS) {
+            barcodeGraphicOverlay = getActivity().findViewById(R.id.graphicOverlay);
+
+            // TODO: Sending null here might fix the issue in which the barcode was sent twice
+            BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(barcodeGraphicOverlay,
+                newDetectionListener, materialBarcodeScannerBuilder.getTrackerColor());
+
+            barcodeDetector.setProcessor(new MultiProcessor.Builder<>(barcodeFactory).build());
+            CameraSource cameraSource = materialBarcodeScannerBuilder.getCameraSource();
+
+            if (cameraSource != null) {
+                try {
+                    cameraSourcePreview = getActivity().findViewById(R.id.preview);
+                    cameraSourcePreview.start(cameraSource, barcodeGraphicOverlay);
+                }
+                catch (IOException e) {
+                    logger.error("Unable to start camera source.", e);
+                    cameraSource.release();
+                }
+            }
+        }
+        else {
+            GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), code, RC_HANDLE_GMS).show();
         }
     }
 

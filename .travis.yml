@@ -24,10 +24,10 @@ android:
 
     # extras
     - extra-android-support
-    #- extra-google-google_play_services
+    - extra-google-google_play_services
     - extra-google-m2repository
     - extra-android-m2repository
-    #- addon-google_apis-google-24
+    - addon-google_apis-google-24
 
 script:
   - ./gradlew clean build --refresh-dependencies

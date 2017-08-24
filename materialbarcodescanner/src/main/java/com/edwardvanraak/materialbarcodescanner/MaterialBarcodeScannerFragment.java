@@ -1,13 +1,19 @@
 package com.edwardvanraak.materialbarcodescanner;
 
+import android.Manifest;
+import android.app.Dialog;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -23,9 +29,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static android.support.v4.content.ContextCompat.checkSelfPermission;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.OnClickListener;
+import static com.edwardvanraak.materialbarcodescanner.MaterialBarcodeScanner.RC_HANDLE_CAMERA_PERM;
 import static com.edwardvanraak.materialbarcodescanner.MaterialBarcodeScannerActivity.RC_HANDLE_GMS;
 
 public class MaterialBarcodeScannerFragment extends Fragment {
@@ -44,6 +52,7 @@ public class MaterialBarcodeScannerFragment extends Fragment {
     protected boolean detectionConsumed;
     private boolean flashOn;
     private int layout;
+    private Dialog dialog;
 
 
     public MaterialBarcodeScannerFragment() {
@@ -66,7 +75,7 @@ public class MaterialBarcodeScannerFragment extends Fragment {
         logger.info("@onMaterialBarcodeScanner");
         materialBarcodeScannerBuilder = materialBarcodeScanner.getMaterialBarcodeScannerBuilder();
         commonBarcodeScanner = new CommonBarcodeScanner(materialBarcodeScannerBuilder);
-        barcodeDetector = materialBarcodeScanner.getMaterialBarcodeScannerBuilder().getBarcodeDetector();
+        barcodeDetector = materialBarcodeScannerBuilder.getBarcodeDetector();
         startCameraSource();
         setupLayout();
     }
@@ -86,7 +95,12 @@ public class MaterialBarcodeScannerFragment extends Fragment {
     public void onStart() {
         logger.info("@onStart");
         super.onStart();
-        EventBus.getDefault().register(this);
+        if (hasCameraPermission()) {
+            EventBus.getDefault().register(this);
+        }
+        else {
+            requestCameraPermission();
+        }
     }
 
     @Override
@@ -112,8 +126,25 @@ public class MaterialBarcodeScannerFragment extends Fragment {
         clean();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode != MaterialBarcodeScanner.RC_HANDLE_CAMERA_PERM) {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+        else if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            EventBus.getDefault().register(this);
+        }
+        else {
+            displayCameraPermissionDeniedMessage();
+        }
+    }
+
     protected void setNewDetectionListener(NewDetectionListener newDetectionListener) {
         this.newDetectionListener = newDetectionListener;
+    }
+
+    protected void displayCameraPermissionDeniedMessage() {
+        Toast.makeText(getActivity(), "Camera permission required to scan codes!", Toast.LENGTH_LONG).show();
     }
 
     // privates
@@ -203,6 +234,16 @@ public class MaterialBarcodeScannerFragment extends Fragment {
         else {
             GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), code, RC_HANDLE_GMS).show();
         }
+    }
+
+    private boolean hasCameraPermission() {
+        int permission = checkSelfPermission(getActivity(), Manifest.permission.CAMERA);
+        return permission == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestCameraPermission() {
+        final String[] mPermissions = new String[]{Manifest.permission.CAMERA};
+        ActivityCompat.requestPermissions(getActivity(), mPermissions, RC_HANDLE_CAMERA_PERM);
     }
 
     private NewDetectionListener newDetectionListener = new NewDetectionListener() {

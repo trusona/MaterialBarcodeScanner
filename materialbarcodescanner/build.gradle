@@ -24,14 +24,10 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: "libs", include: ["*.jar"])
     compile "org.greenrobot:eventbus:3.0.0"
+    compile "org.slf4j:slf4j-api:1.7.25"
 
+    compile "com.google.android.gms:play-services-vision:${playServicesVersion}"
     compile "com.android.support:appcompat-v7:${supportLibVersion}"
     compile "com.android.support:design:${supportLibVersion}"
-
-    compile "com.google.android.gms:play-services-vision:11.0.4"
-
-    // test dependencies
-    testCompile "junit:junit:4.12"
 }

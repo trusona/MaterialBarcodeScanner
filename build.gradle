@@ -37,12 +37,14 @@ allprojects {
 }
 
 ext {
-    compileSdkVersion = 26
+    playServicesVersion = "11.2.0"
     supportLibVersion = "26.0.1"
+
+    theVersion = "1.0.0"
 
     theGroupId = "com.trusona.android"
     theArtifactId = "materialbarcodescanner"
-    theVersion = "0.0.1"
+
     theArtifactSource = "./build/outputs/aar/materialbarcodescanner-release.aar"
     debugArtifactSource = "./build/outputs/aar/materialbarcodescanner-debug.aar"
 }

@@ -1,7 +1,5 @@
 package com.edwardvanraak.materialbarcodescanner;
 
-import android.content.pm.PackageManager;
-import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,17 +23,23 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-import static android.view.View.*;
+import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
+import static android.view.View.OnClickListener;
 import static com.edwardvanraak.materialbarcodescanner.MaterialBarcodeScannerActivity.RC_HANDLE_GMS;
-import static junit.framework.Assert.assertNotNull;
 
 public class MaterialBarcodeScannerFragment extends Fragment {
     private static final Logger logger = LoggerFactory.getLogger(MaterialBarcodeScannerFragment.class);
     private static final int defaultLayout = R.layout.fragment_barcode_capture;
 
+    @Nullable
+    private CommonBarcodeScanner commonBarcodeScanner;
+
+    @Nullable
+    private CameraSourcePreview cameraSourcePreview;
+
     private MaterialBarcodeScannerBuilder materialBarcodeScannerBuilder;
     private GraphicOverlay<BarcodeGraphic> barcodeGraphicOverlay;
-    private CameraSourcePreview cameraSourcePreview;
     private BarcodeDetector barcodeDetector;
     protected boolean detectionConsumed;
     private boolean flashOn;
@@ -61,6 +65,7 @@ public class MaterialBarcodeScannerFragment extends Fragment {
     public void onMaterialBarcodeScanner(MaterialBarcodeScanner materialBarcodeScanner) {
         logger.info("@onMaterialBarcodeScanner");
         materialBarcodeScannerBuilder = materialBarcodeScanner.getMaterialBarcodeScannerBuilder();
+        commonBarcodeScanner = new CommonBarcodeScanner(materialBarcodeScannerBuilder);
         barcodeDetector = materialBarcodeScanner.getMaterialBarcodeScannerBuilder().getBarcodeDetector();
         startCameraSource();
         setupLayout();
@@ -83,7 +88,7 @@ public class MaterialBarcodeScannerFragment extends Fragment {
     }
 
     private void startCameraSource() throws SecurityException {
-        logger.info("@startCameraSource");
+        logger.info("@startCameraSource()");
         // check that the device has play services available.
         int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getContext());
 
@@ -110,14 +115,6 @@ public class MaterialBarcodeScannerFragment extends Fragment {
         }
         else {
             GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), code, RC_HANDLE_GMS).show();
-        }
-    }
-
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    private void updateCenterTrackerForDetectedState() {
-        if (materialBarcodeScannerBuilder.getScannerMode() == MaterialBarcodeScanner.SCANNER_MODE_CENTER) {
-            ImageView centerTracker = getActivity().findViewById(R.id.barcode_square);
-            centerTracker.setImageResource(materialBarcodeScannerBuilder.getTrackerDetectedResourceID());
         }
     }
 
@@ -152,7 +149,8 @@ public class MaterialBarcodeScannerFragment extends Fragment {
     }
 
     private void setupCenterTracker() {
-        logger.info("@setupCenterTracker");
+        logger.info("@setupCenterTracker()");
+
         if (materialBarcodeScannerBuilder.getScannerMode() == MaterialBarcodeScanner.SCANNER_MODE_CENTER) {
             ImageView centerTracker = getActivity().findViewById(R.id.barcode_square);
             centerTracker.setImageResource(materialBarcodeScannerBuilder.getTrackerResourceID());
@@ -161,55 +159,39 @@ public class MaterialBarcodeScannerFragment extends Fragment {
     }
 
     private void setupButtons() {
-        logger.info("@setupButtons");
-        final LinearLayout flashButton = getActivity().findViewById(R.id.flashIconButton);
-        assertNotNull(flashButton);
-        if (isFlashAvailable()) {
-            flashButton.setOnClickListener(new OnClickListener() {
+        logger.info("@setupButtons()");
+        LinearLayout flashButton = getActivity().findViewById(R.id.flashIconButton);
+
+        if (commonBarcodeScanner.isFlashAvailable()) {
+            OnClickListener onClickListener = new OnClickListener() {
 
                 @Override
                 public void onClick(View view) {
                     if (flashOn) {
-                        disableTorch();
+                        commonBarcodeScanner.disableTorch();
                     }
                     else {
-                        enableTorch();
+                        commonBarcodeScanner.enableTorch();
                     }
                     flashOn ^= true;
                 }
-            });
+            };
+
+            flashButton.setOnClickListener(onClickListener);
         }
         else {
             flashButton.setVisibility(GONE);
         }
     }
 
-    private boolean isFlashAvailable() {
-        return getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
-    }
-
-    private void enableTorch() throws SecurityException {
-        materialBarcodeScannerBuilder.getCameraSource().setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-        try {
-            materialBarcodeScannerBuilder.getCameraSource().start();
-        }
-        catch (IOException e) {
-            logger.error("Oops!", e);
-        }
-    }
-
-    private void disableTorch() throws SecurityException {
-        materialBarcodeScannerBuilder.getCameraSource().setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-        try {
-            materialBarcodeScannerBuilder.getCameraSource().start();
-        }
-        catch (IOException e) {
-            logger.error("Oops!", e);
-        }
-    }
-
     private void clean() {
+        logger.info("@clean()");
         EventBus.getDefault().removeStickyEvent(MaterialBarcodeScanner.class);
+
+        if (commonBarcodeScanner != null) {
+            commonBarcodeScanner.clean();
+            commonBarcodeScanner = null;
+        }
 
         if (cameraSourcePreview != null) {
             cameraSourcePreview.release();
@@ -217,24 +199,18 @@ public class MaterialBarcodeScannerFragment extends Fragment {
         }
     }
 
-    protected NewDetectionListener newDetectionListener = new NewDetectionListener() {
+    private NewDetectionListener newDetectionListener = new NewDetectionListener() {
 
         @Override
         public void onNewDetection(Barcode barcode) {
-            logger.info("@onNewDetection");
+            logger.info("@onNewDetection(Barcode)");
+
             if (!detectionConsumed) {
                 detectionConsumed = true;
                 logger.debug("Barcode detected! => {}", barcode.displayValue);
 
                 EventBus.getDefault().postSticky(barcode);
-
-                getActivity().runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        updateCenterTrackerForDetectedState();
-                    }
-                });
+                commonBarcodeScanner.updateCenterTrackerForDetectedState();
 
                 if (materialBarcodeScannerBuilder.isBleepEnabled()) {
                     new SoundPlayer(getContext(), R.raw.bleep);

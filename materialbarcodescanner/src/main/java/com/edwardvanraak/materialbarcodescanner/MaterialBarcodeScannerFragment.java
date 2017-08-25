@@ -142,7 +142,7 @@ public class MaterialBarcodeScannerFragment extends Fragment {
     }
 
     protected void displayCameraPermissionDeniedMessage() {
-        Toast.makeText(getActivity(), "Camera permission required to scan codes!", Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), R.string.default_camera_permission_denied_message, Toast.LENGTH_LONG).show();
     }
 
     // privates

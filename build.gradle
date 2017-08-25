@@ -1,4 +1,6 @@
 buildscript {
+    apply from: "init.gradle"
+
     repositories {
         google()
         jcenter()
@@ -25,7 +27,7 @@ allprojects {
                 username = System.getenv("artifactory_username")?.trim() ?: trusonaUsername
                 password = System.getenv("artifactory_password")?.trim() ?: trusonaPassword
             }
-            url "https://trusona.jfrog.io/trusona/sdk-snapshots-local/"
+            url = repoUrl.call()
         }
     }
 

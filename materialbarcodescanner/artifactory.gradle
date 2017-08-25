@@ -7,7 +7,7 @@ artifactory {
     contextUrl = "https://trusona.jfrog.io/trusona/"
     publish {
         repository {
-            repoKey = "sdk-snapshots-local" // exactly this
+            repoKey = currentBranch.call() == "release" ? "sdk-releases-local" : "sdk-snapshots-local"
             username = System.getenv("artifactory_username")?.trim() ?: trusonaUsername
             password = System.getenv("artifactory_password")?.trim() ?: trusonaPassword
             maven = true
@@ -21,7 +21,7 @@ artifactory {
     }
     resolve {
         repository {
-            repoKey = "sdk-snapshots-local" // exactly-this
+            repoKey = currentBranch.call() == "release" ? "sdk-releases-local" : "sdk-snapshots-local"
             username = System.getenv("artifactory_username")?.trim() ?: trusonaUsername
             password = System.getenv("artifactory_password")?.trim() ?: trusonaPassword
             maven = true

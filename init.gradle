@@ -1,0 +1,21 @@
+allprojects {
+    ext.executeCmd = { cmd ->
+        def process = cmd.execute()
+        def output = new ByteArrayOutputStream()
+        process.waitForProcessOutput(output, new ByteArrayOutputStream())
+
+        if (process.exitValue() == 0) {
+            output.toString().trim()
+        } else {
+            println "command: ${cmd} - (${process.exitValue()})"
+        }
+    }
+
+    ext.currentBranch = {
+        System.getenv("TRAVIS_BRANCH")?.trim() ?: executeCmd.call("git rev-parse --abbrev-ref HEAD") ?: "master"
+    }
+
+    ext.repoUrl = {
+        currentBranch.call() == "release" ? (System.getenv("RELEASES_REPO") ?: RELEASES_REPO) : (System.getenv("SNAPSHOTS_REPO") ?: SNAPSHOTS_REPO)
+    }
+}

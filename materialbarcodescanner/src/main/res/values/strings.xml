@@ -5,4 +5,5 @@
     <string name="no_camera_permission">Cannot start the barcode reader because the camera permission was not granted.</string>
     <string name="flash_icon">flash icon</string>
     <string name="barcode_square">barcode square</string>
+    <string name="default_camera_permission_denied_message">Camera permission required to scan codes!</string>
 </resources>

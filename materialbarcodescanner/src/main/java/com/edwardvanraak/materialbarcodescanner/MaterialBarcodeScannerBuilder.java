@@ -353,5 +353,9 @@ public class MaterialBarcodeScannerBuilder {
 
     public void clean() {
         activity = null;
+        rootView = null;
+        onResultListener = null;
+        barcodeDetector = null;
+        cameraSource = null;
     }
 }

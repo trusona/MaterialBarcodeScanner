@@ -3,7 +3,6 @@ branches:
     - master
     - release
     - /^.*-snapshot$/
-    - wip-improvements ## temp
 
 filter_secrets: false
 sudo: required

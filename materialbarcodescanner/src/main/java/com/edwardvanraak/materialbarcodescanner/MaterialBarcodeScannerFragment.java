@@ -1,7 +1,6 @@
 package com.edwardvanraak.materialbarcodescanner;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -52,7 +51,6 @@ public class MaterialBarcodeScannerFragment extends Fragment {
     protected boolean detectionConsumed;
     private boolean flashOn;
     private int layout;
-    private Dialog dialog;
 
 
     public MaterialBarcodeScannerFragment() {

@@ -49,22 +49,6 @@ class CommonBarcodeScanner {
             .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    void updateCenterTrackerForDetectedState() {
-        Runnable runnable = new Runnable() {
-
-            @Override
-            public void run() {
-                if (materialBarcodeScannerBuilder.getScannerMode() == MaterialBarcodeScanner.SCANNER_MODE_CENTER) {
-                    ImageView centerTracker = materialBarcodeScannerBuilder.getActivity().findViewById(R.id.barcode_square);
-                    centerTracker.setImageResource(materialBarcodeScannerBuilder.getTrackerDetectedResourceID());
-                }
-            }
-        };
-
-        materialBarcodeScannerBuilder.getActivity().runOnUiThread(runnable);
-    }
-
     void clean() {
         materialBarcodeScannerBuilder = null;
     }

@@ -24,8 +24,8 @@ public class MaterialBarcodeScannerBuilder {
     private boolean bleepEnabled = false;
     private boolean used = false; //used to check if a builder is only used
 
-    private int trackerDetectedResourceID = R.drawable.material_barcode_square_512_green;
-    private int trackerResourceID = R.drawable.material_barcode_square_512;
+    private int trackerDetectedResourceID = R.drawable.reticule_overlay;
+    private int trackerResourceID = R.drawable.reticule_overlay;
     private int cameraFacingBack = CameraSource.CAMERA_FACING_BACK;
     private int trackerColor = Color.parseColor("#F44336"); //Material Red 500
     private int scannerMode = MaterialBarcodeScanner.SCANNER_MODE_FREE;

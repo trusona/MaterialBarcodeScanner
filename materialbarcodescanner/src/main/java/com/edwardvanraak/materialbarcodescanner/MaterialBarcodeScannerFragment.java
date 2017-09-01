@@ -151,8 +151,6 @@ public class MaterialBarcodeScannerFragment extends Fragment {
         logger.info("@setupCenterTracker()");
 
         if (materialBarcodeScannerBuilder.getScannerMode() == MaterialBarcodeScanner.SCANNER_MODE_CENTER) {
-            ImageView centerTracker = getActivity().findViewById(R.id.barcode_square);
-            centerTracker.setImageResource(materialBarcodeScannerBuilder.getTrackerResourceID());
             barcodeGraphicOverlay.setVisibility(INVISIBLE);
         }
     }
@@ -160,6 +158,7 @@ public class MaterialBarcodeScannerFragment extends Fragment {
     private void setupButtons() {
         logger.info("@setupButtons()");
         LinearLayout flashButton = getActivity().findViewById(R.id.flashIconButton);
+        final ImageView flashIcon = getActivity().findViewById(R.id.flashIcon);
 
         if (commonBarcodeScanner.isFlashAvailable()) {
             OnClickListener onClickListener = new OnClickListener() {
@@ -168,9 +167,11 @@ public class MaterialBarcodeScannerFragment extends Fragment {
                 public void onClick(View view) {
                     if (flashOn) {
                         commonBarcodeScanner.disableTorch();
+                        flashIcon.setImageResource(R.drawable.flash_off_icon);
                     }
                     else {
                         commonBarcodeScanner.enableTorch();
+                        flashIcon.setImageResource(R.drawable.flash_on_icon);
                     }
                     flashOn ^= true;
                 }
@@ -255,7 +256,6 @@ public class MaterialBarcodeScannerFragment extends Fragment {
                 logger.debug("Barcode detected! => {}", barcode.displayValue);
 
                 EventBus.getDefault().postSticky(barcode);
-                commonBarcodeScanner.updateCenterTrackerForDetectedState();
 
                 if (materialBarcodeScannerBuilder.isBleepEnabled()) {
                     new SoundPlayer(getContext(), R.raw.bleep);

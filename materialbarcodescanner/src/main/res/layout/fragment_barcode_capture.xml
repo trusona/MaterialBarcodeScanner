@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:id="@+id/topLayout"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:keepScreenOn="true"
-             android:orientation="vertical">
+    android:id="@+id/topLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    android:orientation="vertical">
 
     <com.edwardvanraak.materialbarcodescanner.CameraSourcePreview
         android:id="@+id/preview"
@@ -14,7 +14,7 @@
         <com.edwardvanraak.materialbarcodescanner.GraphicOverlay
             android:id="@+id/graphicOverlay"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
     </com.edwardvanraak.materialbarcodescanner.CameraSourcePreview>
 
@@ -32,7 +32,7 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center_horizontal|bottom"
             android:text=""
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+            android:textAppearance="?android:attr/textAppearanceLarge" />
     </RelativeLayout>
 
     <TextView
@@ -49,18 +49,15 @@
         android:shadowRadius="2"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/white"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
-    <include layout="@layout/actions_main"/>
+    <include layout="@layout/actions_main" />
 
     <ImageView
         android:id="@+id/barcode_square"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="38dp"
-        android:adjustViewBounds="true"
-        android:alpha="0.5"
-        android:contentDescription="@string/barcode_square"/>
+        android:layout_height="match_parent"
+        android:background="@drawable/reticule_overlay"
+        android:contentDescription="@string/barcode_square" />
 
 </FrameLayout>

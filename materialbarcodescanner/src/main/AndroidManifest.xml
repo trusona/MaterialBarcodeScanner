@@ -11,10 +11,12 @@
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="barcode" />
+
         <activity
             android:theme="@style/NoActionBar"
             android:name=".MaterialBarcodeScannerActivity"
-            android:label="@string/library_name" >
-        </activity>
+            android:screenOrientation="portrait"
+            android:label="@string/library_name" />
+
     </application>
 </manifest>

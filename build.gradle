@@ -39,8 +39,8 @@ allprojects {
 }
 
 ext {
-    playServicesVersion = "11.2.2"
-    supportLibVersion = "26.0.1"
+    playServicesVersion = "11.4.0"
+    supportLibVersion = "26.1.0"
 
     theVersion = "1.2.0"
 

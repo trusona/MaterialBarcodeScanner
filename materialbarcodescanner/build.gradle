@@ -1,6 +1,8 @@
 apply plugin: "com.android.library"
 apply plugin: "maven-publish"
 apply plugin: "com.jfrog.artifactory"
+apply plugin: "com.github.ben-manes.versions"
+apply plugin: "com.trusona.plugins.build-plugin"
 apply from: "artifactory.gradle"
 
 android {
@@ -13,10 +15,11 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            zipAlignEnabled true
+            debuggable false
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
-    }
-    productFlavors {
     }
     lintOptions {
         abortOnError false
@@ -24,10 +27,9 @@ android {
 }
 
 dependencies {
-    compile "org.greenrobot:eventbus:3.0.0"
-    compile "org.slf4j:slf4j-api:1.7.25"
-
-    compile "com.google.android.gms:play-services-vision:${playServicesVersion}"
-    compile "com.android.support:appcompat-v7:${supportLibVersion}"
-    compile "com.android.support:design:${supportLibVersion}"
+    compile "com.google.android.gms:play-services-vision:${trusona.version('play-services')}"
+    compile "com.android.support:appcompat-v7:${trusona.version('android-support')}"
+    compile "com.android.support:design:${trusona.version('android-support')}"
+    compile "org.greenrobot:eventbus:${trusona.version('eventbus')}"
+    compile "org.slf4j:slf4j-api:${trusona.version('slf4j')}"
 }

@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: "com.trusona.plugins.build-plugin"
 
 android {
     compileSdkVersion 26
@@ -20,7 +21,7 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:${supportLibVersion}"
-    compile "com.android.support:design:${supportLibVersion}"
+    compile "com.android.support:appcompat-v7:${trusona.version('android-support')}"
+    compile "com.android.support:design:${trusona.version('android-support')}"
     compile project(":materialbarcodescanner")
 }

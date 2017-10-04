@@ -7,11 +7,20 @@ buildscript {
         mavenCentral()
         mavenLocal()
         maven { url "https://jitpack.io" }
+        maven {
+            credentials {
+                username = environmentValue("artifactory_username") ?: trusonaUsername
+                password = environmentValue("artifactory_password") ?: trusonaPassword
+            }
+            url = repoUrl.call()
+        }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:2.3.3"
         classpath "org.codehaus.groovy:groovy-android-gradle-plugin:1.2.0"
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
+        classpath "com.github.ben-manes:gradle-versions-plugin:0.15.0"
+        classpath "com.trusona.plugins:trusona-build-plugin:0.0.2"
     }
 }
 
@@ -24,8 +33,8 @@ allprojects {
         maven { url "https://jitpack.io" }
         maven {
             credentials {
-                username = System.getenv("artifactory_username")?.trim() ?: trusonaUsername
-                password = System.getenv("artifactory_password")?.trim() ?: trusonaPassword
+                username = environmentValue("artifactory_username") ?: trusonaUsername
+                password = environmentValue("artifactory_password") ?: trusonaPassword
             }
             url = repoUrl.call()
         }
@@ -39,10 +48,7 @@ allprojects {
 }
 
 ext {
-    playServicesVersion = "11.4.0"
-    supportLibVersion = "26.1.0"
-
-    theVersion = "1.2.0"
+    theVersion = "1.2.1"
 
     theGroupId = "com.trusona.android"
     theArtifactId = "materialbarcodescanner"

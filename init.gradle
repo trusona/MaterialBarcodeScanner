@@ -6,16 +6,21 @@ allprojects {
 
         if (process.exitValue() == 0) {
             output.toString().trim()
-        } else {
+        }
+        else {
             println "command: ${cmd} - (${process.exitValue()})"
         }
     }
 
+    ext.environmentValue = { key ->
+        System.getenv(key)?.trim() ?: null
+    }
+
     ext.currentBranch = {
-        System.getenv("TRAVIS_BRANCH")?.trim() ?: executeCmd.call("git rev-parse --abbrev-ref HEAD") ?: "master"
+        environmentValue("TRAVIS_BRANCH") ?: executeCmd.call("git rev-parse --abbrev-ref HEAD") ?: "master"
     }
 
     ext.repoUrl = {
-        currentBranch.call() == "release" ? (System.getenv("RELEASES_REPO") ?: RELEASES_REPO) : (System.getenv("SNAPSHOTS_REPO") ?: SNAPSHOTS_REPO)
+        currentBranch.call() == "release" ? (environmentValue("RELEASES_REPO") ?: RELEASES_REPO) : (environmentValue("SNAPSHOTS_REPO") ?: SNAPSHOTS_REPO)
     }
 }

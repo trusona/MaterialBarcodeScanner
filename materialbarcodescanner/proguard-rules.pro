@@ -1,17 +1,37 @@
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in C:\Users\Edward\AppData\Local\Android\sdk/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the proguardFiles
-# directive in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+## notes: https://www.guardsquare.com/en/proguard/manual/examples#library
+##
+-forceprocessing
+-target 7
 
-# Add any project specific keep options here:
+-dontnote org.apache.http.params.**
+-dontnote org.apache.http.conn.**
+-dontnote android.net.http.**
+-dontnote com.google.android.gms.common.internal.safeparcel.SafeParcelable
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+-keep class com.edwardvanraak.materialbarcodescanner.** { *; }
+-keep interface com.edwardvanraak.materialbarcodescanner.** { *; }
+-keep enum com.edwardvanraak.materialbarcodescanner.** { *; }
+
+-keepattributes LineNumberTable
+-keepattributes EnclosingMethod
+-keepattributes InnerClasses
+-keepattributes *Annotation*
+-keepattributes SourceFile
+-keepattributes Deprecated
+-keepattributes Exceptions
+-keepattributes Signature
+
+##
+## http://greenrobot.org/eventbus/documentation/proguard
+##
+-keepclassmembers class ** {
+    @org.greenrobot.eventbus.Subscribe <methods>;
+}
+
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
+-dontnote org.greenrobot.eventbus.ThreadMode
+
+# Only required if you use AsyncExecutor
+-keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
+    <init>(java.lang.Throwable);
+}

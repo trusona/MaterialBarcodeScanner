@@ -9,37 +9,22 @@ buildscript {
         maven { url "https://jitpack.io" }
         maven {
             credentials {
-                username = environmentValue("artifactory_username") ?: trusonaUsername
-                password = environmentValue("artifactory_password") ?: trusonaPassword
+                username = trusonaUsername
+                password = trusonaPassword
             }
-            url = repoUrl.call()
+            url = trusonaRepoUrl.call()
         }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:2.3.3"
         classpath "org.codehaus.groovy:groovy-android-gradle-plugin:1.2.0"
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
-        classpath "com.github.ben-manes:gradle-versions-plugin:0.15.0"
-        classpath "com.trusona.plugins:trusona-build-plugin:0.0.2"
+        classpath "com.github.ben-manes:gradle-versions-plugin:0.17.0"
+        classpath "com.trusona.plugins:trusona-build-plugin:0.0.3"
     }
 }
 
 allprojects {
-    repositories {
-        google()
-        jcenter()
-        mavenCentral()
-        mavenLocal()
-        maven { url "https://jitpack.io" }
-        maven {
-            credentials {
-                username = environmentValue("artifactory_username") ?: trusonaUsername
-                password = environmentValue("artifactory_password") ?: trusonaPassword
-            }
-            url = repoUrl.call()
-        }
-    }
-
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {
             options.compilerArgs << "-Xlint:all,-processing"

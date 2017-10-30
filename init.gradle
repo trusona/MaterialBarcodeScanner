@@ -6,21 +6,34 @@ allprojects {
 
         if (process.exitValue() == 0) {
             output.toString().trim()
-        }
-        else {
+        } else {
             println "command: ${cmd} - (${process.exitValue()})"
         }
     }
 
     ext.environmentValue = { key ->
-        System.getenv(key)?.trim() ?: null
+        System.getenv(key as String)?.trim() ?: null
     }
 
     ext.currentBranch = {
-        environmentValue("TRAVIS_BRANCH") ?: executeCmd.call("git rev-parse --abbrev-ref HEAD") ?: "master"
+        environmentValue.call("TRAVIS_BRANCH") ?: executeCmd.call("git rev-parse --abbrev-ref HEAD") ?: "master"
     }
 
-    ext.repoUrl = {
-        currentBranch.call() == "release" ? (environmentValue("RELEASES_REPO") ?: RELEASES_REPO) : (environmentValue("SNAPSHOTS_REPO") ?: SNAPSHOTS_REPO)
+    ext.trusonaRepoUrl = {
+        currentBranch.call() == "release" ? RELEASES_REPO : SNAPSHOTS_REPO
+    }
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        jcenter()
+        google()
+        maven {
+            credentials {
+                username = trusonaUsername
+                password = trusonaPassword
+            }
+            url = trusonaRepoUrl.call()
+        }
     }
 }

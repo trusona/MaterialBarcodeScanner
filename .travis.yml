@@ -28,8 +28,11 @@ android:
     - extra-android-m2repository
     - addon-google_apis-google-24
 
+before_script:
+  - ./sbin/trusona-env.sh
+
 script:
-  - ./gradlew clean build --refresh-dependencies
+  - ./gradlew clean build
 
 deploy:
   provider: script

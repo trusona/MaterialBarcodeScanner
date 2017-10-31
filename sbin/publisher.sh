@@ -1,1 +1,1 @@
-clear;./gradlew build publish artifactoryPublish
+clear;./gradlew build && ./gradlew publish artifactoryPublish

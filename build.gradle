@@ -33,7 +33,7 @@ allprojects {
 }
 
 ext {
-    theVersion = "3.2.5-SNAPSHOT"
+    theVersion = "3.2.5"
 
     theGroupId = "com.trusona.android"
     theArtifactId = "materialbarcodescanner"

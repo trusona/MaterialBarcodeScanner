@@ -33,3 +33,20 @@ dependencies {
     compile "org.greenrobot:eventbus:${trusona.version('eventbus')}"
     compile "org.slf4j:slf4j-api:${trusona.version('slf4j')}"
 }
+
+configurations.all {
+  resolutionStrategy {
+    failOnVersionConflict()
+
+    def set = [] as Set
+    set << "com.android.support:support-v4:${trusona.version('android-support')}"
+
+    force set.toArray()
+    forcedModules = set
+  }
+}
+
+task sourceJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier "source"
+}

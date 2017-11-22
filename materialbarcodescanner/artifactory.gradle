@@ -30,7 +30,7 @@ publishing {
         aar(MavenPublication) {
             groupId "${theGroupId}"
             artifactId "${theArtifactId}"
-            version "${theVersion}"
+            version "${trusona.version('trusona-sdk')}"
             artifact source: file("${theArtifactSource}")
             artifact source: file("${debugArtifactSource}"), classifier: "debug"
 
@@ -48,7 +48,7 @@ publishing {
         local(MavenPublication) {
             groupId "${theGroupId}"
             artifactId "${theArtifactId}"
-            version "${theVersion}"
+            version "${trusona.version('trusona-sdk')}"
             artifact source: file("${theArtifactSource}")
             artifact source: file("${debugArtifactSource}"), classifier: "debug"
             artifact(sourceJar)

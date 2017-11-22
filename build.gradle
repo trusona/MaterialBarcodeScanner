@@ -20,7 +20,7 @@ buildscript {
         classpath "org.codehaus.groovy:groovy-android-gradle-plugin:1.2.0"
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
         classpath "com.github.ben-manes:gradle-versions-plugin:0.17.0"
-        classpath "com.trusona.plugins:trusona-build-plugin:0.0.5"
+        classpath "com.trusona.plugins:trusona-build-plugin:0.0.6"
     }
 }
 
@@ -33,7 +33,7 @@ allprojects {
 }
 
 ext {
-    theVersion = "3.2.5-SNAPSHOT"
+    theVersion = "3.2.6-SNAPSHOT"
 
     theGroupId = "com.trusona.android"
     theArtifactId = "materialbarcodescanner"

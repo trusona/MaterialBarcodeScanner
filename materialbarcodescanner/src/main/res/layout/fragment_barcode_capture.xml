@@ -51,13 +51,11 @@
         android:textColor="@android:color/white"
         android:textStyle="bold" />
 
-    <include layout="@layout/actions_main" />
-
     <ImageView
-        android:id="@+id/barcode_square"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/reticule_overlay"
-        android:contentDescription="@string/barcode_square" />
+        android:id="@+id/flashIconButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:theme="@style/FlashIconButtonStyle" />
 
 </FrameLayout>

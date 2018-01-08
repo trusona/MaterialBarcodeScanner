@@ -35,7 +35,12 @@
             android:layout_centerHorizontal="true" />
     </RelativeLayout>
 
-    <include layout="@layout/actions_main"/>
+    <ImageView
+        android:id="@+id/flashIconButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:theme="@style/FlashIconButtonStyle" />
 
     <ImageView
         android:layout_width="wrap_content"

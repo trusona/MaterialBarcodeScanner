@@ -86,20 +86,20 @@ public class MaterialBarcodeScannerActivity extends AppCompatActivity {
     }
 
     private void setupButtons() {
-        final ImageView flashOnButton = findViewById(R.id.flashIconButton);
-        assertNotNull(flashOnButton);
+        final ImageView flashButton = findViewById(R.id.flashIconButton);
+        assertNotNull(flashButton);
 
-        flashOnButton.setOnClickListener(new View.OnClickListener() {
+        flashButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
                 if (flashOn) {
                     commonBarcodeScanner.disableTorch();
-                    flashOnButton.setImageResource(R.drawable.flash_off_icon);
+                    flashButton.setImageResource(R.drawable.flash_off_icon);
                 }
                 else {
                     commonBarcodeScanner.enableTorch();
-                    flashOnButton.setImageResource(R.drawable.flash_on_icon);
+                    flashButton.setImageResource(R.drawable.flash_on_icon);
                 }
                 flashOn ^= true;
             }

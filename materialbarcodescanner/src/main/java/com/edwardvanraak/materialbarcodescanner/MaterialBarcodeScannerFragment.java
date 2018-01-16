@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -157,8 +156,7 @@ public class MaterialBarcodeScannerFragment extends Fragment {
 
     private void setupButtons() {
         logger.info("@setupButtons()");
-        LinearLayout flashButton = getActivity().findViewById(R.id.flashIconButton);
-        final ImageView flashIcon = getActivity().findViewById(R.id.flashIcon);
+        final ImageView flashButton = getActivity().findViewById(R.id.flashIconButton);
 
         if (commonBarcodeScanner.isFlashAvailable()) {
             OnClickListener onClickListener = new OnClickListener() {
@@ -167,11 +165,11 @@ public class MaterialBarcodeScannerFragment extends Fragment {
                 public void onClick(View view) {
                     if (flashOn) {
                         commonBarcodeScanner.disableTorch();
-                        flashIcon.setImageResource(R.drawable.flash_off_icon);
+                        flashButton.setImageResource(R.drawable.flash_off_icon);
                     }
                     else {
                         commonBarcodeScanner.enableTorch();
-                        flashIcon.setImageResource(R.drawable.flash_on_icon);
+                        flashButton.setImageResource(R.drawable.flash_on_icon);
                     }
                     flashOn ^= true;
                 }

@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -87,23 +86,20 @@ public class MaterialBarcodeScannerActivity extends AppCompatActivity {
     }
 
     private void setupButtons() {
-        final LinearLayout flashOnButton = findViewById(R.id.flashIconButton);
-        final ImageView flashIcon = findViewById(R.id.flashIcon);
+        final ImageView flashButton = findViewById(R.id.flashIconButton);
+        assertNotNull(flashButton);
 
-        assertNotNull(flashOnButton);
-        assertNotNull(flashIcon);
-
-        flashOnButton.setOnClickListener(new View.OnClickListener() {
+        flashButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
                 if (flashOn) {
                     commonBarcodeScanner.disableTorch();
-                    flashIcon.setImageResource(R.drawable.flash_off_icon);
+                    flashButton.setImageResource(R.drawable.flash_off_icon);
                 }
                 else {
                     commonBarcodeScanner.enableTorch();
-                    flashIcon.setImageResource(R.drawable.flash_on_icon);
+                    flashButton.setImageResource(R.drawable.flash_on_icon);
                 }
                 flashOn ^= true;
             }

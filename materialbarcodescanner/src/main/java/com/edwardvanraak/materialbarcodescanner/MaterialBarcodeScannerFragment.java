@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -240,7 +239,7 @@ public class MaterialBarcodeScannerFragment extends Fragment {
 
     private void requestCameraPermission() {
         final String[] mPermissions = new String[]{Manifest.permission.CAMERA};
-        ActivityCompat.requestPermissions(getActivity(), mPermissions, RC_HANDLE_CAMERA_PERM);
+        requestPermissions(mPermissions, RC_HANDLE_CAMERA_PERM);
     }
 
     private NewDetectionListener newDetectionListener = new NewDetectionListener() {
